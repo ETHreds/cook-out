@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '@/store'
+
 import LandingView from '@/views/LandingView.vue'
 import RecipesView from '@/views/RecipesView.vue'
 import UserView from '@/views/UserView.vue'
@@ -17,6 +19,11 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
+      path: '/auth',
+      name: 'auth',
+      component: () => import('../views/AuthView.vue')
+    },    
+    {
       path: '/meals/:mealId',
       name: 'mealDetails',
       component: RecipesView
@@ -24,7 +31,8 @@ const router = createRouter({
     {
       path: '/user',
       name: 'userview',
-      component: UserView
+      component: UserView,
+      meta: { requiresAuth: true }
     }
 
     // {
@@ -37,5 +45,18 @@ const router = createRouter({
     // }
   ]
 })
+
+// Navigation guard to check if route requires authentication
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    if (store.getters['auth/isAuthenticated']) {
+      next(); 
+    } else {
+      next({ name: 'auth' }); 
+    }
+  } else {
+    next(); 
+  }
+});
 
 export default router

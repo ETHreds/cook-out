@@ -35,3 +35,44 @@ export const fetchMealDetails = async(mealId) => {
     }
   }
 
+export const AuthService = {
+    async signUp(user) {
+      try {
+        const response = await axios.post(`${BASE_URL}/email-signup`, user);
+        console.log(response.data)
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async signIn(credentials) {
+      try {
+          const response = await axios.post(`${BASE_URL}/email-signin`, credentials);
+          return response.data;
+      } catch (error) {
+          throw error;
+      }
+  }
+};
+
+export const MealService = {
+  async saveMeal(mealId, token) {
+    try {
+        if (!token) {
+            throw new Error('User not authenticated');
+        }
+
+        const response = await axios.post(`${BASE_URL}/meals/${mealId}`, null, {
+            headers: {
+                Authorization: `Bearer ${token}`, 
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error saving meal:', error);
+        throw error;
+    }
+  }
+};
+

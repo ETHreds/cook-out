@@ -1,12 +1,12 @@
 
 <template>
-    <div class="card flex justify-content-center">
+    <div v-if="isAuthenticated" class="card flex justify-content-center">
         <Menu :model="items" class="w-full md:w-15rem">
             <template #start>
                 <button v-ripple class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
                     <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" class="mr-2" shape="circle" />
                     <span class="inline-flex flex-column">
-                        <span class="font-bold">Amy Elsner</span>
+                        <span class="font-bold">{{ user.username }}</span>
                         <span class="text-sm">About</span>
                     </span>
                 </button>
@@ -72,4 +72,10 @@ const items = ref([
         separator: true
     }
 ]);
+
+import { useStore } from 'vuex';
+
+const store = useStore();
+const isAuthenticated = store.getters['auth/isAuthenticated'];
+const user = store.getters['auth/getUser'];
 </script>

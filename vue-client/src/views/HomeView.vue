@@ -15,7 +15,7 @@
                         <div class="flex gap-3 mt-1">
                             <div>
                                 <span>
-                                    <i class="pi pi-bookmark"></i>
+                                    <i @click="handleSaveMeal(meal.idMeal)" class="pi pi-bookmark"></i>
                                 </span><span>
                                     <i class="pi pi-share-alt"></i>
                                 </span>
@@ -34,12 +34,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { fetchMealsByClientLocation, fetchMealDetails } from '@/services/backend.services';
+import { fetchMealsByClientLocation, MealService } from '@/services/backend.services';
 
 const meals = ref([]);
-const clientLocation = ref(''); // Update with actual client location if available
-const router = useRouter(); // Move useRouter inside the setup()
+const clientLocation = ref(''); 
 
+import { useStore } from 'vuex'; 
+
+const store = useStore();
 onMounted(async () => {
     try {
         meals.value = await fetchMealsByClientLocation();
@@ -48,18 +50,17 @@ onMounted(async () => {
     }
 });
 
-const viewRecipe = async (mealId) => {
+const handleSaveMeal = async (mealId) => {
     try {
-        const mealDetails = await fetchMealDetails(mealId);
-        console.log(mealDetails)
-        console.log(router.push({ name: 'mealDetails', params: { mealName: getFormattedMealName(mealDetails.strMeal) } }));
+        const token = store.state.auth.token;
+        if (!token) {
+            throw new Error('User not authenticated');
+        }
+        await MealService.saveMeal(mealId, token);
+        console.log('Meal saved successfully');
     } catch (error) {
-        // Handle error
+        console.error('Error saving meal:', error);
     }
-};
-
-const getFormattedMealName = (mealName) => {
-    return mealName.replace(/\s+/g, '-');
 };
 </script>
 

@@ -1,10 +1,13 @@
 const http = require('http')
 const mongoose = require('mongoose')
 
+
+require('dotenv').config();
+
 const app = require('./app.js')
 
 const PORT = process.env.PORT || 3000
-const MONGO_URL = 'mongodb+srv://Bambi:ETHreds97@dishi.86lcsux.mongodb.net/?retryWrites=true&w=majority&appName=dishi'
+const MONGO_URL = process.env.MONGO_URL
 
 const server = http.createServer(app);
 

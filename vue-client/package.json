@@ -18,7 +18,8 @@
     "sweetalert2": "^11.10.5",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
-    "vuetify": "^3.5.7"
+    "vuetify": "^3.5.7",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.3",
